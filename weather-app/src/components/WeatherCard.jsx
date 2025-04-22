@@ -13,7 +13,7 @@ export default function WeatherCard({ data, isCelsius, background }) {
           backgroundImage: `url(/backgrounds/${background})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          maxWidth: "400px"
+          maxWidth: "500px"
         }}
       >
         <div className="card-body">

@@ -16,7 +16,7 @@ export default function ForecastCard({ date, weather, minTemp, maxTemp, isCelsiu
     <div
       className="text-dark text-center"
       style={{
-        width: "200px",
+        width: "400px",
         backgroundImage: `url(/backgrounds/${background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
