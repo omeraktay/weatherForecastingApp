@@ -115,9 +115,7 @@ export default function App() {
             onChange={(e) => setCity(e.target.value)}
             placeholder="Enter city name"
           />
-          <button className="btn btn-primary" type="submit">
-            Search
-          </button>
+          <button className="btn btn-primary" type="submit">Search</button>
         </form>
         <ToggleTemp isCelsius={isCelsius} setIsCelsius={setIsCelsius} />
         {error && <ErrorMessage message={error} />}
