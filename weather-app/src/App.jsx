@@ -105,7 +105,7 @@ export default function App() {
   };
 
   return (
-    <div className="app d-flex flex-column min-vh-100" style={{ backgroundColor: "#20232a" }}>
+    <div className="app d-flex flex-column min-vh-100" style={{ backgroundColor: "#1d4949" }}>
       <div className="container py-4 text-center text-white flex-grow-1">
         <h1 className="mb-4">Weather Forecast App</h1>
         <form onSubmit={handleSearch} className="d-flex mb-3 justify-content-center gap-2">
@@ -115,14 +115,14 @@ export default function App() {
             onChange={(e) => setCity(e.target.value)}
             placeholder="Enter city name"
           />
-          <button className="btn btn-primary" type="submit">Search</button>
+          <button className="btn btn-outline-warning" type="submit">Search</button>
         </form>
         <ToggleTemp isCelsius={isCelsius} setIsCelsius={setIsCelsius} />
         {error && <ErrorMessage message={error} />}
         {loading && (
           <div className="my-4">
             <div className="spinner-border text-light" role="status">
-              <span className="visually-hidden">Loading...</span>
+              <span className="visually-hidden text-warning">Loading...</span>
             </div>
           </div>
         )}

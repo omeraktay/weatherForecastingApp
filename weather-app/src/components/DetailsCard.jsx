@@ -11,14 +11,14 @@ export default function ExtraDetailsCard({ data }) {
   };
 
   return (
-    <Card className="my-3 bg-dark text-white shadow-lg">
+    <Card className="my-3 text-warning shadow-lg" style={{ backgroundColor: "#1d4949" }}>
       <Card.Body className="d-flex flex-wrap justify-content-around text-center">
-        <div className="p-2">
+        <div className="p-2" style={{color: "#b6edfc"}}>
           <FaWind size={30} />
           <p className="mb-0">Wind</p>
           <strong>{wind.speed} m/s</strong>
         </div>
-        <div className="p-2">
+        <div className="p-2" style={{color: "#e4eff2"}}>
           <FaTint size={30} />
           <p className="mb-0">Humidity</p>
           <strong>{humidity}%</strong>
@@ -28,7 +28,7 @@ export default function ExtraDetailsCard({ data }) {
           <p className="mb-0">Sunrise</p>
           <strong>{formatTime(sunrise)}</strong>
         </div>
-        <div className="p-2">
+        <div className="p-2" style={{color: "#e06f1d"}}>
           <FaMoon size={30} />
           <p className="mb-0">Sunset</p>
           <strong>{formatTime(sunset)}</strong>
