@@ -5,11 +5,11 @@ import Forecast from "./components/Forecast";
 import ToggleTemp from "./components/ToggleTemp";
 import ErrorMessage from "./components/ErrorMessage";
 import DetailsCard from "./components/DetailsCard";
+import Footer from "./components/Footer"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import Footer from "./components/Footer";
 
-const apiKey = "fcad8b236e285e7062bae629b3cf117b";
+const API_KEY = "fcad8b236e285e7062bae629b3cf117b";
 
 export default function App() {
   const [city, setCity] = useState("");
@@ -32,7 +32,7 @@ export default function App() {
           try {
             setLoading(true);
             const weatherRes = await axios.get(
-              `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
+              `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
             );
             setCity(weatherRes.data.name);
             fetchWeather(weatherRes.data.name);
@@ -56,10 +56,10 @@ export default function App() {
       setError(null);
       setLoading(true);
       const weatherRes = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${API_KEY}`
       );
       const forecastRes = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&appid=${API_KEY}`
       );
 
       const backgrounds = {
@@ -68,7 +68,6 @@ export default function App() {
         Rain: "rain.gif",
         Snow: "snow.gif",
         Thunderstorm: "storm.gif",
-        Mist: "mist.gif"
       };
 
       const main = weatherRes.data.weather[0].main;
@@ -84,14 +83,38 @@ export default function App() {
         sunset: weatherRes.data.sys.sunset,
       });
 
-      const forecastItems = forecastRes.data.list.filter((_, i) => i % 8 === 0);
-      const forecastWithBackgrounds = forecastItems.map((item) => {
-        const forecastMain = item.weather[0].main;
-        const forecastBg = backgrounds[forecastMain] || "default.gif";
-        return { ...item, background: forecastBg };
+      // Group forecast data by date
+      const dailyForecasts = {};
+      forecastRes.data.list.forEach((item) => {
+        const date = item.dt_txt.split(" ")[0];
+        if (!dailyForecasts[date]) dailyForecasts[date] = [];
+        dailyForecasts[date].push(item);
       });
 
-      setForecastData(forecastWithBackgrounds);
+      // Compute min/max temp per day and get weather background
+      const forecastWithMinMax = Object.entries(dailyForecasts).map(([date, entries]) => {
+        let minTemp = Infinity;
+        let maxTemp = -Infinity;
+        let main = "Clear";
+
+        entries.forEach((entry) => {
+          const temp = entry.main.temp;
+          if (temp < minTemp) minTemp = temp;
+          if (temp > maxTemp) maxTemp = temp;
+          if (entry.weather[0]) main = entry.weather[0].main;
+        });
+
+        const forecastBg = backgrounds[main] || "default.gif";
+        return {
+          date,
+          minTemp,
+          maxTemp,
+          background: forecastBg,
+          weather: main,
+        };
+      });
+
+      setForecastData(forecastWithMinMax);
     } catch (err) {
       setError("City not found. Please try again.");
     } finally {
@@ -115,21 +138,23 @@ export default function App() {
             onChange={(e) => setCity(e.target.value)}
             placeholder="Enter city name"
           />
-          <button className="btn btn-outline-warning" type="submit">Search</button>
+          <button className="btn btn-outline-warning" type="submit">
+            Search
+          </button>
         </form>
         <ToggleTemp isCelsius={isCelsius} setIsCelsius={setIsCelsius} />
         {error && <ErrorMessage message={error} />}
         {loading && (
           <div className="my-4">
             <div className="spinner-border text-light" role="status">
-              <span className="visually-hidden text-warning">Loading...</span>
+              <span className="visually-hidden">Loading...</span>
             </div>
           </div>
         )}
         {!loading && weatherData && (
           <>
             <WeatherCard data={weatherData} isCelsius={isCelsius} background={weatherData.background} /> <hr />
-            <DetailsCard data={weatherData} /> <hr />
+            <DetailsCard data={weatherData} /> < hr />
             <Forecast data={forecastData} isCelsius={isCelsius} />
           </>
         )}
