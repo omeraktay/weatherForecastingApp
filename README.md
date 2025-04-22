@@ -1,5 +1,6 @@
 < ----  ABOUT APP   ---- >
 
+- On the landing page, it shows the weather on your location.
 - Frameworks and libraries: React, Bootstrap, Axios.
 - Weather data is being fetched from OpenweatherMap API.
 
